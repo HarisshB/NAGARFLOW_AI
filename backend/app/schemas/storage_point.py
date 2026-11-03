@@ -4,7 +4,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-
 AvailabilityStatus = Literal["available", "unavailable"]
 
 

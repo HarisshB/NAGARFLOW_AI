@@ -112,7 +112,9 @@ def test_unknown_and_known_email_are_limited_alike(
         for _ in range(6)
     ]
 
-    assert [(r.status_code, r.json()) for r in known] == [(r.status_code, r.json()) for r in unknown]
+    assert [(r.status_code, r.json()) for r in known] == [
+        (r.status_code, r.json()) for r in unknown
+    ]
 
 
 @pytest.mark.parametrize("email", ["asha@example.com", "nobody@example.com"])

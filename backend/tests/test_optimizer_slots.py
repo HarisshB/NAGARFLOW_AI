@@ -3,10 +3,6 @@
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-
-from app.api import scenarios
-from app.core.config import settings
-from app.services.optimizer_slots import OptimizerBusy, optimizer_slot, reset_slots
 from test_optimization import (  # noqa: F401
     clean_roads,
     fake_roads,
@@ -14,6 +10,10 @@ from test_optimization import (  # noqa: F401
     saved,
 )
 from test_validation import auth_headers, build_scenario  # noqa: F401
+
+from app.api import scenarios
+from app.core.config import settings
+from app.services.optimizer_slots import OptimizerBusy, optimizer_slot, reset_slots
 
 BUSY = "The optimizer is busy. Try again shortly."
 

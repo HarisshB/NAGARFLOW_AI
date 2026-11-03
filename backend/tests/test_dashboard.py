@@ -162,7 +162,11 @@ def test_cards_report_the_real_database_totals(
         storage_points=(1200.0, 800.0, 450.5),
         vehicles=((5000.0, True), (5000.0, False)),
         facility_capacity_kg=9000.0,
-        runs=(("greedy", "feasible", 18400.0), ("or_tools", "feasible", 15200.0), ("greedy", "no_solution", 0.0)),
+        runs=(
+            ("greedy", "feasible", 18400.0),
+            ("or_tools", "feasible", 15200.0),
+            ("greedy", "no_solution", 0.0),
+        ),
     )
 
     body = client.get(SUMMARY, headers=auth_headers).json()

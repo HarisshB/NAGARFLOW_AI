@@ -5,11 +5,11 @@ from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+from test_roles import add_depot, headers_for, linked_user
 
 from app.core.permissions import PERMISSIONS
 from app.main import app
 from app.models import Depot, User
-from test_roles import add_depot, headers_for, linked_user
 
 PREFIX = "/api/v1"
 PUBLIC_ACTIONS = ("register", "login", "forgot-password", "verify-reset-token", "reset-password")
@@ -78,7 +78,9 @@ def api_routes() -> list[APIRoute]:
 
 
 @pytest.fixture
-def accounts(client: TestClient, registered_user: dict[str, str], db_session: Session) -> dict[str, User]:
+def accounts(
+    client: TestClient, registered_user: dict[str, str], db_session: Session
+) -> dict[str, User]:
     planner = db_session.scalar(select(User).where(User.email == registered_user["email"]))
     linked = {
         role: linked_user(db_session, planner, role, f"{role}@example.com")
@@ -133,7 +135,9 @@ def test_a_refused_write_changes_nothing(
     response = client.post(
         f"{PREFIX}/depots",
         headers=headers_for(accounts["reviewer"]),
-        json={"name": "New", "code": "NEW", "address": "Trichy", "latitude": 10.8, "longitude": 78.7},
+        json={
+            "name": "New", "code": "NEW", "address": "Trichy", "latitude": 10.8, "longitude": 78.7
+        },
     )
 
     assert response.status_code == 403

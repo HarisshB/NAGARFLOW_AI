@@ -2,9 +2,9 @@ from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import Select, func, or_, select
-from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.sql.elements import ColumnElement
 
 from app.api.dependencies import get_db, reject_reserved_code, require
 from app.core.permissions import workspace_owner_id
@@ -67,7 +67,9 @@ def _validate_write(
         )
     )
     if duplicate_number is not None:
-        raise HTTPException(status_code=409, detail="A vehicle with this registration number already exists.")
+        raise HTTPException(
+            status_code=409, detail="A vehicle with this registration number already exists."
+        )
 
     return _get_owned_depot(db, payload.depot_id, user)
 
@@ -77,7 +79,10 @@ def _linked_scenarios(db: Session, vehicle: Vehicle) -> list[Scenario]:
         select(Scenario)
         .join(scenario_vehicles, scenario_vehicles.c.scenario_id == Scenario.id)
         .where(scenario_vehicles.c.vehicle_id == vehicle.id)
-        .options(selectinload(Scenario.selected_vehicles), selectinload(Scenario.selected_storage_points))
+        .options(
+            selectinload(Scenario.selected_vehicles),
+            selectinload(Scenario.selected_storage_points),
+        )
     ).all()
 
 
@@ -100,7 +105,10 @@ def _validate_linked_scenario_capacity(
     if total_waste > selected_capacity:
         raise HTTPException(
             status_code=409,
-            detail="This capacity change would leave a linked scenario with more waste than its vehicles can carry.",
+            detail=(
+                "This capacity change would leave a linked scenario with more waste than its "
+                "vehicles can carry."
+            ),
         )
 
 
@@ -130,7 +138,9 @@ def create_vehicle(
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="A vehicle with this registration number already exists.") from None
+        raise HTTPException(
+            status_code=409, detail="A vehicle with this registration number already exists."
+        ) from None
     db.refresh(vehicle)
     return db.scalar(_vehicle_query().where(Vehicle.id == vehicle.id))
 
@@ -172,7 +182,10 @@ def update_vehicle(
     ):
         raise HTTPException(
             status_code=409,
-            detail="Update linked scenarios before changing this vehicle's depot or making it unavailable.",
+            detail=(
+                "Update linked scenarios before changing this vehicle's depot or making it "
+                "unavailable."
+            ),
         )
     for scenario in linked_scenarios:
         _validate_linked_scenario_capacity(scenario, vehicle, payload.capacity_kg)
@@ -190,7 +203,9 @@ def update_vehicle(
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="A vehicle with this registration number already exists.") from None
+        raise HTTPException(
+            status_code=409, detail="A vehicle with this registration number already exists."
+        ) from None
     db.refresh(vehicle)
     return db.scalar(_vehicle_query().where(Vehicle.id == vehicle.id))
 

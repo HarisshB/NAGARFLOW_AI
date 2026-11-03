@@ -23,13 +23,13 @@ from app.models import (
     User,
     Vehicle,
 )
-from app.services.validation import RoadCheckResult, RoadLocation, validate_scenario
 from app.models.scenario import (
     scenario_depots,
     scenario_facilities,
     scenario_storage_points,
     scenario_vehicles,
 )
+from app.services.validation import RoadCheckResult, RoadLocation, validate_scenario
 
 SCENARIOS = "/api/v1/scenarios"
 

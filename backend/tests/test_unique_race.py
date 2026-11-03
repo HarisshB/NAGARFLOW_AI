@@ -3,17 +3,18 @@ database constraint decides, and the loser must get a 409 rather than a 500."""
 
 import pytest
 from fastapi.testclient import TestClient
-
-from app.api import depots, facilities, storage_points
 from test_depots import depot_payload
 from test_facilities import facility_payload
 from test_storage_points import point_payload
 from test_validation import auth_headers  # noqa: F401
 
+from app.api import depots, facilities, storage_points
+
 RECORDS = {
     "depot": (
         "/api/v1/depots", depots, "_validate_depot",
-        lambda code: depot_payload(code=code, is_active=False), "A depot with this code already exists.",
+        lambda code: depot_payload(code=code, is_active=False),
+        "A depot with this code already exists.",
     ),
     "storage_point": (
         "/api/v1/storage-points", storage_points, "_validate_point_code",

@@ -3,7 +3,6 @@ from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 DEFAULT_JWT_SECRET = "development-only-replace-before-deploy"
 # The placeholder in .env.example, long enough to pass a length check alone.
 EXAMPLE_JWT_SECRET = "replace-this-with-a-long-random-secret-before-deploy"
@@ -87,7 +86,8 @@ def _production_problems(values: Settings) -> list[str]:
         or len(secret) < MIN_JWT_SECRET_LENGTH
     ):
         problems.append(
-            f"JWT_SECRET_KEY must be a private value of at least {MIN_JWT_SECRET_LENGTH} characters."
+            "JWT_SECRET_KEY must be a private value of at least "
+            f"{MIN_JWT_SECRET_LENGTH} characters."
         )
     if any(host in origin for origin in values.cors_origins for host in LOCAL_HOSTS):
         problems.append("CORS_ORIGINS must list the deployed frontend, not localhost.")
@@ -95,7 +95,10 @@ def _production_problems(values: Settings) -> list[str]:
         problems.append("FRONTEND_BASE_URL must be the deployed frontend, not localhost.")
     if not values.smtp_host:
         problems.append("SMTP_HOST must be set, or reset links are written to disk and logged.")
-    if EXAMPLE_DATABASE_PASSWORD in values.database_url or PLACEHOLDER_PREFIX in values.database_url:
+    if (
+        EXAMPLE_DATABASE_PASSWORD in values.database_url
+        or PLACEHOLDER_PREFIX in values.database_url
+    ):
         problems.append("DATABASE_URL still uses the example password.")
     if not values.road_network_path:
         problems.append("ROAD_NETWORK_PATH must point at the roads file, or no route can run.")

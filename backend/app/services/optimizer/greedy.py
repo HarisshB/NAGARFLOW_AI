@@ -12,11 +12,11 @@ from dataclasses import dataclass, field
 from app.services.optimizer.types import (
     FEASIBLE,
     NO_SOLUTION,
-    no_route_message,
     MethodResult,
     RoutingProblem,
     Stop,
     VehicleRoute,
+    no_route_message,
 )
 
 
@@ -60,7 +60,7 @@ def solve_greedy(problem: RoutingProblem) -> MethodResult:
 
     vehicles = [
         _Vehicle(vehicle_id, capacity)
-        for vehicle_id, capacity in zip(problem.vehicle_ids, problem.capacity_g)
+        for vehicle_id, capacity in zip(problem.vehicle_ids, problem.capacity_g, strict=True)
     ]
     remaining = list(problem.points)
 

@@ -13,6 +13,12 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, inspect, select, text
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
+from test_validation import (  # noqa: F401
+    FakeRoadNetwork,
+    auth_headers,
+    build_scenario,
+    stub_scenario,
+)
 
 from app.core.config import settings
 from app.db.migrations import (
@@ -30,12 +36,6 @@ from app.services.optimization import (
 )
 from app.services.road_costs import CostMatrix
 from app.services.validation import RoadCheckResult
-from test_validation import (  # noqa: F401
-    FakeRoadNetwork,
-    auth_headers,
-    build_scenario,
-    stub_scenario,
-)
 
 
 def line_costs(network: object, locations: list) -> CostMatrix:
@@ -187,13 +187,17 @@ def test_upgrade_makes_distance_nullable() -> None:
             "created_at DATETIME)"
         ))
         connection.execute(text(
-            "INSERT INTO optimization_runs (scenario_id, algorithm, status, total_distance_m, created_at) "
+            "INSERT INTO optimization_runs "
+            "(scenario_id, algorithm, status, total_distance_m, created_at) "
             "VALUES (1, 'greedy', 'success', 12.5, '2026-11-01 10:00:00')"
         ))
 
     upgrade_legacy_optimization_run_schema(engine)
 
-    columns = {column["name"]: column for column in inspect(engine).get_columns("optimization_runs")}
+    columns = {
+        column["name"]: column
+        for column in inspect(engine).get_columns("optimization_runs")
+    }
     assert columns["total_distance_m"]["nullable"] is True
     assert {"batch_id", "solve_ms", "message", "routes", "input_hash"} <= set(columns)
     with engine.connect() as connection:

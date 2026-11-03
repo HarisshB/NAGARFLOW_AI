@@ -18,10 +18,10 @@ from app.models import (
     User,
     Vehicle,
 )
-from app.schemas.scenario import ScenarioOptions, ScenarioResponse, ScenarioWrite
 from app.models.optimization_run import ALGORITHM_GREEDY, ALGORITHM_OR_TOOLS
 from app.schemas.optimization import MethodRun, OptimizationComparison
 from app.schemas.preview import FacilityPreview, RoutePreview, ScenarioName
+from app.schemas.scenario import ScenarioOptions, ScenarioResponse, ScenarioWrite
 from app.schemas.validation import ValidationHistoryEntry, ValidationReportResponse
 from app.services.optimization import comparison_difference, optimize_scenario
 from app.services.optimizer_slots import OptimizerBusy, optimizer_slot
@@ -50,7 +50,9 @@ def _scenario_query() -> Select[tuple[Scenario]]:
 
 def _get_owned_scenario(db: Session, scenario_id: int, user: User) -> Scenario:
     scenario = db.scalar(
-        _scenario_query().where(Scenario.id == scenario_id, Scenario.user_id == workspace_owner_id(user))
+        _scenario_query().where(
+            Scenario.id == scenario_id, Scenario.user_id == workspace_owner_id(user)
+        )
     )
     if scenario is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Scenario not found.")
@@ -107,7 +109,9 @@ def _validated_resources(
     owned_scenario_ids = select(Scenario.id).where(Scenario.user_id == workspace_owner_id(user))
     depot = db.get(Depot, payload.depot_id)
     if depot is None or depot.user_id != workspace_owner_id(user) or not depot.is_active:
-        raise HTTPException(status_code=422, detail="Select an active depot from your configured records.")
+        raise HTTPException(
+            status_code=422, detail="Select an active depot from your configured records."
+        )
 
     facility = db.scalar(
         select(ProcessingFacility).where(
@@ -122,7 +126,9 @@ def _validated_resources(
         )
     )
     if facility is None:
-        raise HTTPException(status_code=422, detail="Select a processing facility from your records.")
+        raise HTTPException(
+            status_code=422, detail="Select a processing facility from your records."
+        )
     # Rule 4: an inactive facility cannot be chosen for a new scenario.
     if facility.status != "active":
         raise HTTPException(
@@ -161,7 +167,9 @@ def _validated_resources(
         )
     ).all()
     if len(points) != len(payload.storage_point_ids):
-        raise HTTPException(status_code=422, detail="Select storage points from your configured records.")
+        raise HTTPException(
+            status_code=422, detail="Select storage points from your configured records."
+        )
     if any(point.availability_status != "available" for point in points):
         raise HTTPException(
             status_code=422,

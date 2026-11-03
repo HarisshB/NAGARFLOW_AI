@@ -5,12 +5,12 @@ from datetime import datetime
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
+from test_validation import auth_headers, build_scenario, stub_scenario  # noqa: F401
 
 from app.api import dashboard, scenarios
 from app.core.config import settings
 from app.services.optimizer.types import RoutingProblem, no_route_message
 from app.services.validation import NullRoadNetwork, validate_scenario
-from test_validation import auth_headers, build_scenario, stub_scenario  # noqa: F401
 
 ORIGIN = "http://localhost:5173"
 

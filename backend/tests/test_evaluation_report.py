@@ -7,6 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from test_optimization import line_costs, straight_line
+from test_validation import auth_headers  # noqa: F401
 
 from app.core.config import settings
 from app.evaluation.catalog_loader import load_catalog
@@ -14,8 +16,6 @@ from app.models import OptimizationRun, Scenario, ScenarioValidation, User
 from app.services import optimization
 from app.services.evaluation_report import build_report, report_csv
 from app.services.optimization import optimize_scenario
-from test_optimization import line_costs, straight_line
-from test_validation import auth_headers  # noqa: F401
 
 REPORT_URL = "/api/v1/evaluation/report"
 

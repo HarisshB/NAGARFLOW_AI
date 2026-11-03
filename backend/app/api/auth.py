@@ -64,17 +64,27 @@ def register(payload: UserCreate, db: Session = Depends(get_db)) -> AuthResponse
     email = str(payload.email).lower()
     existing_user = db.scalar(select(User).where(User.email == email))
     if existing_user:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An account with this email already exists.")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An account with this email already exists.",
+        )
 
-    user = User(name=payload.name.strip(), email=email, hashed_password=hash_password(payload.password))
+    user = User(
+        name=payload.name.strip(), email=email, hashed_password=hash_password(payload.password)
+    )
     if not user.name:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Please enter your name.")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Please enter your name."
+        )
     db.add(user)
     try:
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An account with this email already exists.") from None
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An account with this email already exists.",
+        ) from None
     db.refresh(user)
     return issue_auth_response(user)
 

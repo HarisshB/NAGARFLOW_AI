@@ -5,13 +5,13 @@ from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from test_validation import FakeRoadNetwork, auth_headers  # noqa: F401
 
 from app.evaluation import catalog_loader
 from app.evaluation.catalog_loader import CATALOG_VERSION, load_catalog, read_catalog
 from app.models import OptimizationRun, Scenario, StoragePoint, User
 from app.services.optimization import run_provenance
 from app.services.validation import RoadCheckResult, validate_scenario
-from test_validation import FakeRoadNetwork, auth_headers  # noqa: F401
 
 EVALUATION_URL = "/api/v1/evaluation/scenarios"
 CODES = [f"S{number:02d}" for number in range(1, 11)]

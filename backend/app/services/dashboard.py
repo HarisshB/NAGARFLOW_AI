@@ -11,14 +11,13 @@ from sqlalchemy.orm import Session
 
 from app.core.permissions import workspace_owner_id
 from app.evaluation import CATALOG_CODE_PREFIX
-from app.models.scenario import scenario_storage_points, scenario_vehicles
 from app.models.optimization_run import (
     FAILED_STATUSES,
     SUCCESSFUL_STATUSES,
     OptimizationRun,
 )
 from app.models.processing_facility import ProcessingFacility
-from app.models.scenario import Scenario
+from app.models.scenario import Scenario, scenario_storage_points, scenario_vehicles
 from app.models.storage_point import StoragePoint
 from app.models.user import User
 from app.models.vehicle import Vehicle

@@ -78,7 +78,10 @@ Backend:
 ```powershell
 cd backend
 py -m pytest
+py -m ruff check .
 ```
+
+`ruff check .` is the backend linter; its rules are in `backend/ruff.toml`.
 
 The backend suite runs against an in-memory SQLite database, so it needs no
 running PostgreSQL and never touches your development data.

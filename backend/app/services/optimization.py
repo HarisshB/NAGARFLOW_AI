@@ -150,12 +150,14 @@ def _route_json(
     vehicle = next(v for v in _scenario_vehicles(scenario) if v.id == route.vehicle_id)
     path = [start, *(locations[stop.code] for stop in route.stops), end]
     geometry: list[tuple[float, float]] = []
-    for source, target in zip(path, path[1:]):
+    for source, target in zip(path, path[1:], strict=False):
         geometry.extend(route_geometry(network, source, target))
     stops = []
     for stop in route.stops:
         location = locations[stop.code]
-        stops.append({**asdict(stop), "latitude": location.latitude, "longitude": location.longitude})
+        stops.append(
+            {**asdict(stop), "latitude": location.latitude, "longitude": location.longitude}
+        )
     return {
         "vehicle_id": route.vehicle_id,
         "vehicle_name": vehicle.name,

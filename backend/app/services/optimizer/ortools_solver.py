@@ -17,12 +17,12 @@ from app.services.optimizer.types import (
     FEASIBLE,
     INFEASIBLE,
     NO_SOLUTION,
-    no_route_message,
     TIMEOUT,
     MethodResult,
     RoutingProblem,
     Stop,
     VehicleRoute,
+    no_route_message,
 )
 
 STATUS_TIMEOUT = routing_enums_pb2.RoutingSearchStatus.ROUTING_FAIL_TIMEOUT

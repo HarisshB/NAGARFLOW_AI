@@ -78,7 +78,9 @@ def test_one_coordinator_cannot_see_another_coordinators_facility(
 
     assert client.get(FACILITIES, headers=other_headers).json() == []
     assert client.get(f"{FACILITIES}/{mine['id']}", headers=other_headers).status_code == 404
-    assert client.get(f"{FACILITIES}/{mine['id']}/capacity", headers=other_headers).status_code == 404
+    assert client.get(
+        f"{FACILITIES}/{mine['id']}/capacity", headers=other_headers
+    ).status_code == 404
 
 
 # --- CRUD --------------------------------------------------------------
@@ -171,7 +173,9 @@ def test_negative_capacity_is_rejected(client: TestClient, auth_headers: dict[st
 def test_coordinates_outside_valid_range_are_rejected(
     client: TestClient, auth_headers: dict[str, str], field: str, value: float
 ) -> None:
-    response = client.post(FACILITIES, json=facility_payload(**{field: value}), headers=auth_headers)
+    response = client.post(
+        FACILITIES, json=facility_payload(**{field: value}), headers=auth_headers
+    )
     assert response.status_code == 422
 
 

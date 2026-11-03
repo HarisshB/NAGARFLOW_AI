@@ -6,6 +6,9 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+# Importing app.models before create_all runs registers every table on
+# Base.metadata.
+import app.models  # noqa: F401
 from app.api.auth import router as auth_router
 from app.api.dashboard import router as dashboard_router
 from app.api.depots import router as depots_router
@@ -27,8 +30,8 @@ from app.core.config import (
 from app.db.base import Base
 from app.db.migrations import (
     upgrade_legacy_depot_schema,
-    upgrade_legacy_facility_schema,
     upgrade_legacy_evaluation_schema,
+    upgrade_legacy_facility_schema,
     upgrade_legacy_optimization_run_schema,
     upgrade_legacy_scenario_schema,
     upgrade_legacy_storage_point_schema,
@@ -36,10 +39,6 @@ from app.db.migrations import (
     upgrade_legacy_vehicle_schema,
 )
 from app.db.session import engine
-
-# Importing app.models before create_all runs registers every table on
-# Base.metadata.
-import app.models  # noqa: F401
 
 API_V1_PREFIX = "/api/v1"
 

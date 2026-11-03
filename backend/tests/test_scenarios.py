@@ -1,9 +1,8 @@
 """Scenario management tests."""
 
 import pytest
-from sqlalchemy import create_engine
 from fastapi.testclient import TestClient
-from sqlalchemy import select
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from app.models import (
@@ -254,7 +253,9 @@ def test_name_must_be_unique_per_user(
     auth_headers: dict[str, str],
     scenario_resources: dict[str, object],
 ) -> None:
-    assert client.post(SCENARIOS, json=payload(scenario_resources), headers=auth_headers).status_code == 201
+    assert client.post(
+        SCENARIOS, json=payload(scenario_resources), headers=auth_headers
+    ).status_code == 201
     duplicate = client.post(SCENARIOS, json=payload(scenario_resources), headers=auth_headers)
     assert duplicate.status_code == 409
 

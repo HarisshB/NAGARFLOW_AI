@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from test_validation import auth_headers  # noqa: F401
 
 from app.api import dashboard
 from app.core.config import (
@@ -18,7 +19,6 @@ from app.core.config import (
     settings,
 )
 from app.main import app
-from test_validation import auth_headers  # noqa: F401
 
 BACKEND = Path(__file__).resolve().parents[1]
 STRONG_SECRET = "x" * 32

@@ -23,7 +23,9 @@ def test_register_creates_account_and_returns_token(client: TestClient) -> None:
     assert "hashed_password" not in body["user"]
 
 
-def test_register_rejects_duplicate_email(client: TestClient, registered_user: dict[str, str]) -> None:
+def test_register_rejects_duplicate_email(
+    client: TestClient, registered_user: dict[str, str]
+) -> None:
     response = client.post("/api/v1/auth/register", json=registered_user)
     assert response.status_code == 409
 
@@ -36,7 +38,9 @@ def test_register_rejects_short_password(client: TestClient) -> None:
     assert response.status_code == 422
 
 
-def test_login_succeeds_with_correct_password(client: TestClient, registered_user: dict[str, str]) -> None:
+def test_login_succeeds_with_correct_password(
+    client: TestClient, registered_user: dict[str, str]
+) -> None:
     response = client.post(
         "/api/v1/auth/login",
         json={"email": registered_user["email"], "password": registered_user["password"]},
@@ -53,7 +57,9 @@ def test_login_rejects_wrong_password(client: TestClient, registered_user: dict[
     assert response.status_code == 401
 
 
-def test_me_returns_profile_for_valid_token(client: TestClient, registered_user: dict[str, str]) -> None:
+def test_me_returns_profile_for_valid_token(
+    client: TestClient, registered_user: dict[str, str]
+) -> None:
     token = client.post(
         "/api/v1/auth/login",
         json={"email": registered_user["email"], "password": registered_user["password"]},
@@ -69,7 +75,9 @@ def test_me_rejects_garbage_token(client: TestClient) -> None:
     assert response.status_code == 401
 
 
-def test_legacy_unversioned_auth_path_still_works(client: TestClient, registered_user: dict[str, str]) -> None:
+def test_legacy_unversioned_auth_path_still_works(
+    client: TestClient, registered_user: dict[str, str]
+) -> None:
     """The original /auth/* paths stay mounted so nothing already deployed breaks."""
     response = client.post(
         "/auth/login",

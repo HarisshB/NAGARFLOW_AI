@@ -117,14 +117,14 @@ class _RoadSearch:
         total, leaves_by, enters_by, leave_share, enter_share = best
         path = self._path(leaves_by, enters_by)
         graph = self.road_graph.graph
-        road_time = sum(graph[a][b]["time_s"] for a, b in zip(path, path[1:]))
+        road_time = sum(graph[a][b]["time_s"] for a, b in zip(path, path[1:], strict=False))
         time_s = leave_share * from_segment.time_s + road_time + enter_share * to_segment.time_s
         return _Leg(total, time_s, path)
 
 
 def _snap_all(network: GeoPackageRoadNetwork, locations: list[RoadLocation]) -> list[Snap]:
     snaps = [network.snap(location) for location in locations]
-    missing = [loc.name for loc, snap in zip(locations, snaps) if snap is None]
+    missing = [loc.name for loc, snap in zip(locations, snaps, strict=True) if snap is None]
     if missing:
         raise ValueError(f"Not on the road network: {', '.join(missing)}")
     return snaps

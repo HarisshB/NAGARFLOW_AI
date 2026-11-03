@@ -77,7 +77,9 @@ def seed(database_url: str, password: str) -> dict[str, int]:
             engine.dispose()
             raise ValueError("That database already has tables, and this script never adds to one.")
     else:
-        raise ValueError("Performance data only goes in a new SQLite file or an empty PostgreSQL database.")
+        raise ValueError(
+            "Performance data only goes in a new SQLite file or an empty PostgreSQL database."
+        )
 
     Base.metadata.create_all(bind=engine)
     with Session(engine) as db:

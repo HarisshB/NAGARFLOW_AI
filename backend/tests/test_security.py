@@ -8,18 +8,18 @@ from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-
-from app.core.config import settings
-from app.core.security import create_access_token
-from app.evaluation.catalog_loader import load_catalog
-from app.main import app
-from app.models import Depot, User
 from test_depots import depot_payload
 from test_facilities import facility_payload
 from test_preview import add_good_batch
 from test_roles import headers_for, linked_user
 from test_storage_points import point_payload
 from test_vehicles import vehicle_payload
+
+from app.core.config import settings
+from app.core.security import create_access_token
+from app.evaluation.catalog_loader import load_catalog
+from app.main import app
+from app.models import Depot, User
 
 PREFIX = "/api/v1"
 ME = f"{PREFIX}/auth/me"
@@ -34,7 +34,9 @@ def scenario_payload() -> dict[str, object]:
     }
 
 
-def id_routes(records: dict[str, int], batch: str, member: int) -> list[tuple[str, str, dict | None]]:
+def id_routes(
+    records: dict[str, int], batch: str, member: int
+) -> list[tuple[str, str, dict | None]]:
     scenario = records["scenario"]
     depot = records["depot"]
     vehicle = records["vehicle"]
@@ -157,7 +159,9 @@ def test_an_expired_token_is_refused(client: TestClient, registered_user: dict[s
     assert client.get(ME, headers=bearer(token)).status_code == 401
 
 
-def test_a_wrong_secret_token_is_refused(client: TestClient, registered_user: dict[str, str]) -> None:
+def test_a_wrong_secret_token_is_refused(
+    client: TestClient, registered_user: dict[str, str]
+) -> None:
     token = jwt.encode(
         {"sub": "1", "exp": datetime.now(timezone.utc) + timedelta(minutes=5)},
         "y" * 40, algorithm="HS256",
@@ -212,7 +216,9 @@ def test_oversized_text_is_refused(
 
 
 @pytest.mark.parametrize("field", ("vehicle_number", "name", "vehicle_type"))
-def test_oversized_vehicle_text_is_refused(client: TestClient, workspaces: dict, field: str) -> None:
+def test_oversized_vehicle_text_is_refused(
+    client: TestClient, workspaces: dict, field: str
+) -> None:
     response = client.post(
         f"{PREFIX}/vehicles", headers=headers_for(workspaces["mine"]),
         json={**vehicle_payload({"id": 1}), field: BIG_TEXT},
@@ -222,7 +228,9 @@ def test_oversized_vehicle_text_is_refused(client: TestClient, workspaces: dict,
 
 
 @pytest.mark.parametrize("field", ("name", "description"))
-def test_oversized_scenario_text_is_refused(client: TestClient, workspaces: dict, field: str) -> None:
+def test_oversized_scenario_text_is_refused(
+    client: TestClient, workspaces: dict, field: str
+) -> None:
     response = client.post(
         f"{PREFIX}/scenarios", headers=headers_for(workspaces["mine"]),
         json={**scenario_payload(), field: BIG_TEXT},

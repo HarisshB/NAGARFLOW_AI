@@ -274,7 +274,9 @@ def test_legacy_depot_table_is_upgraded_without_inventing_location_data() -> Non
     upgrade_legacy_depot_schema(engine)
 
     columns = {column["name"] for column in inspect(engine).get_columns("depots")}
-    assert {"code", "address", "latitude", "longitude", "is_active", "created_at", "updated_at"} <= columns
+    assert {
+        "code", "address", "latitude", "longitude", "is_active", "created_at", "updated_at"
+    } <= columns
     with engine.connect() as connection:
         row = connection.execute(
             text("SELECT code, latitude, longitude, is_active FROM depots WHERE id = 1")

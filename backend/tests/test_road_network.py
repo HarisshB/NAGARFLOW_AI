@@ -11,6 +11,7 @@ from pathlib import Path
 
 import networkx as nx
 import pytest
+from road_fixtures import write_gpkg
 
 from app.core.config import settings
 from app.services import road_network
@@ -21,7 +22,6 @@ from app.services.road_network import (
     load_road_graph,
 )
 from app.services.validation import NullRoadNetwork, RoadCheckResult, RoadLocation
-from road_fixtures import write_gpkg
 
 SNAP_M = 200.0
 A = (78.70, 10.80)
@@ -231,7 +231,9 @@ def at(name: str, node: tuple[float, float], north_m: float = 0) -> RoadLocation
     return RoadLocation(name, node[1] + north_m / METRES_PER_DEGREE, node[0])
 
 
-def along(start: tuple[float, float], end: tuple[float, float], share: float) -> tuple[float, float]:
+def along(
+    start: tuple[float, float], end: tuple[float, float], share: float
+) -> tuple[float, float]:
     return start[0] + (end[0] - start[0]) * share, start[1] + (end[1] - start[1]) * share
 
 

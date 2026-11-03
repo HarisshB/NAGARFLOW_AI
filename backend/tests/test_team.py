@@ -6,13 +6,13 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+from test_permissions import ALL_ROLES
+from test_roles import headers_for, linked_user
 
 from app.core.clock import utcnow
 from app.core.security import hash_reset_token
 from app.models import User
 from app.models.password_reset_token import PasswordResetToken
-from test_permissions import ALL_ROLES
-from test_roles import headers_for, linked_user
 
 TEAM = "/api/v1/team"
 MEMBER = {
@@ -88,7 +88,9 @@ def test_blank_name_is_refused(client: TestClient, headers: dict[str, str]) -> N
 
 
 def test_short_password_is_refused(client: TestClient, headers: dict[str, str]) -> None:
-    assert client.post(TEAM, headers=headers, json={**MEMBER, "password": "short"}).status_code == 422
+    assert client.post(
+        TEAM, headers=headers, json={**MEMBER, "password": "short"}
+    ).status_code == 422
 
 
 def test_changing_a_role_applies_at_once(
@@ -120,7 +122,9 @@ def test_another_planners_account_cannot_be_changed(
 ) -> None:
     member = linked_user(db_session, other_planner, "reviewer", "r@example.com")
 
-    assert client.put(f"{TEAM}/{member.id}", headers=headers, json={"role": "driver"}).status_code == 404
+    assert client.put(
+        f"{TEAM}/{member.id}", headers=headers, json={"role": "driver"}
+    ).status_code == 404
     assert client.delete(f"{TEAM}/{member.id}", headers=headers).status_code == 404
     db_session.refresh(member)
     assert member.role == "reviewer"
@@ -171,5 +175,7 @@ def test_linked_accounts_cannot_manage_the_team(
 
     assert client.get(TEAM, headers=member_headers).status_code == 403
     assert client.post(TEAM, headers=member_headers, json=MEMBER).status_code == 403
-    assert client.put(f"{TEAM}/{member.id}", headers=member_headers, json={"role": "reviewer"}).status_code == 403
+    assert client.put(
+        f"{TEAM}/{member.id}", headers=member_headers, json={"role": "reviewer"}
+    ).status_code == 403
     assert client.delete(f"{TEAM}/{member.id}", headers=member_headers).status_code == 403

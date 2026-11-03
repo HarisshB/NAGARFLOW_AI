@@ -71,7 +71,9 @@ def list_depots(
     user: User = Depends(require("records.read")),
 ) -> list[Depot]:
     return db.scalars(
-        select(Depot).where(Depot.user_id == workspace_owner_id(user)).order_by(Depot.name, Depot.id)
+        select(Depot)
+        .where(Depot.user_id == workspace_owner_id(user))
+        .order_by(Depot.name, Depot.id)
     ).all()
 
 

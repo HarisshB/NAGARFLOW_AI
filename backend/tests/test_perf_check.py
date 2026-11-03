@@ -10,12 +10,12 @@ from sqlalchemy.orm import Session
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+from conftest import postgres_url  # noqa: E402
 from perf_check import percentile, seed  # noqa: E402
 
 from app.core.security import verify_password  # noqa: E402
 from app.db.base import Base  # noqa: E402
 from app.models import OptimizationRun, Scenario, StoragePoint, User  # noqa: E402
-from conftest import postgres_url  # noqa: E402
 
 
 def test_percentile_of_a_known_list() -> None:

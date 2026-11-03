@@ -3,7 +3,8 @@
 Tests run against an in-memory SQLite database so they never touch the
 development PostgreSQL data, and so they can run without Docker or a
 database server. Set TEST_DATABASE_URL to run them on PostgreSQL instead,
-against a database whose name ends in _test, which each test empties. The FastAPI ``get_db`` dependency is replaced with a
+against a database whose name ends in _test, which each test empties. The
+FastAPI ``get_db`` dependency is replaced with a
 session bound to that SQLite database.
 """
 
@@ -17,15 +18,14 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+# Importing every model registers its table on ``Base.metadata`` so that
+# ``create_all`` below builds the full schema.
+import app.models as all_models  # noqa: F401
 from app.api.dependencies import get_db
 from app.core.config import settings
 from app.core.rate_limit import forgot_password_limiter, login_limiter
 from app.db.base import Base
 from app.main import app
-
-# Importing every model registers its table on ``Base.metadata`` so that
-# ``create_all`` below builds the full schema.
-import app.models as all_models  # noqa: F401
 from app.services.road_network import reset_road_network
 
 

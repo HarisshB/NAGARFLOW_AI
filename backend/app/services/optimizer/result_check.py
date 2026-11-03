@@ -81,7 +81,9 @@ def check_result(problem: RoutingProblem, result: MethodResult) -> list[str]:
             issues.append(f"{problem.names[index]} is visited {count} times, not once.")
 
     vehicles = Counter(route.vehicle_id for route in result.routes)
-    issues.extend(f"Vehicle {vid} makes more than one trip." for vid, n in vehicles.items() if n > 1)
+    issues.extend(
+        f"Vehicle {vid} makes more than one trip." for vid, n in vehicles.items() if n > 1
+    )
 
     delivered = sum(problem.demand_g[index] for index in problem.points)
     if delivered > problem.facility_capacity_g:

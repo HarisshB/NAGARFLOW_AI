@@ -4,11 +4,11 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from test_roles import headers_for, linked_user
 
 from app.evaluation.catalog_loader import load_catalog
 from app.models import OptimizationRun, Scenario, User
 from app.services.evaluation_report import build_report
-from test_roles import headers_for, linked_user
 
 NAMES = "/api/v1/scenarios/names"
 

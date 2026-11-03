@@ -135,7 +135,10 @@ def upgrade_legacy_vehicle_schema(engine: Engine) -> None:
         if not has_unique_number:
             with engine.begin() as connection:
                 connection.execute(
-                    text("CREATE UNIQUE INDEX uq_vehicles_vehicle_number ON vehicles (vehicle_number)")
+                    text(
+                        "CREATE UNIQUE INDEX uq_vehicles_vehicle_number "
+                        "ON vehicles (vehicle_number)"
+                    )
                 )
 
 
@@ -319,10 +322,14 @@ def upgrade_legacy_storage_point_schema(engine: Engine) -> None:
             )
         )
         connection.execute(
-            text("UPDATE storage_points SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL")
+            text(
+                "UPDATE storage_points SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL"
+            )
         )
         connection.execute(
-            text("UPDATE storage_points SET updated_at = CURRENT_TIMESTAMP WHERE updated_at IS NULL")
+            text(
+                "UPDATE storage_points SET updated_at = CURRENT_TIMESTAMP WHERE updated_at IS NULL"
+            )
         )
 
     if engine.dialect.name == "postgresql":

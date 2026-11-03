@@ -1,0 +1,14 @@
+target-version = "py312"
+line-length = 100
+extend-exclude = [".venv"]
+
+[lint]
+select = ["E", "F", "W", "I", "B"]
+
+[lint.flake8-bugbear]
+# FastAPI resolves these defaults per request; calling them in a signature is its documented style.
+extend-immutable-calls = ["fastapi.Depends", "app.api.dependencies.require"]
+
+[lint.per-file-ignores]
+# Tests import shared pytest fixtures and then request them by name as parameters.
+"tests/**" = ["F811"]

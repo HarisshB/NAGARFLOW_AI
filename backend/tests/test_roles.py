@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, inspect, select, text
 from sqlalchemy.orm import Session
+from test_dashboard import seed_scenario
 
 from app.core.permissions import workspace_owner_id
 from app.core.security import create_access_token, hash_password
@@ -11,7 +12,6 @@ from app.db.migrations import upgrade_legacy_user_schema
 from app.evaluation.catalog_loader import load_catalog
 from app.models import Depot, User
 from app.services.evaluation_report import build_report
-from test_dashboard import seed_scenario
 
 CREDENTIALS = {"name": "Asha Rao", "email": "asha@example.com", "password": "original-password-123"}
 
@@ -131,7 +131,9 @@ def test_upgrade_adds_role_and_planner_to_old_users(tmp_path) -> None:
     with engine.connect() as connection:
         row = connection.execute(text("SELECT role, planner_id FROM users")).one()
     assert tuple(row) == ("planner", None)
-    assert "ix_users_planner_id" in {index["name"] for index in inspect(engine).get_indexes("users")}
+    assert "ix_users_planner_id" in {
+        index["name"] for index in inspect(engine).get_indexes("users")
+    }
     engine.dispose()
 
 

@@ -4,14 +4,14 @@ from datetime import datetime
 from decimal import Decimal
 
 import pytest
+from conftest import require_test_database
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from test_roles import linked_user
 
 from app.core.security import hash_password
 from app.db import migrations
 from app.models import StoragePoint, User
-from conftest import require_test_database
-from test_roles import linked_user
 
 UPGRADES = [name for name in dir(migrations) if name.startswith("upgrade_legacy_")]
 

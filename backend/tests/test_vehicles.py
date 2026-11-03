@@ -2,7 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import inspect, text
+from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
 from app.db.migrations import upgrade_legacy_vehicle_schema
@@ -441,22 +441,27 @@ def test_legacy_vehicle_table_migration_allows_independent_records() -> None:
     engine = create_engine("sqlite://")
     with engine.begin() as connection:
         connection.exec_driver_sql(
-            "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, hashed_password TEXT)"
+            "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, "
+            "hashed_password TEXT)"
         )
         connection.exec_driver_sql(
             "CREATE TABLE scenarios (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, "
-            "reference TEXT, name TEXT, description TEXT, status TEXT, created_at TIMESTAMP, updated_at TIMESTAMP)"
+            "reference TEXT, name TEXT, description TEXT, status TEXT, created_at TIMESTAMP, "
+            "updated_at TIMESTAMP)"
         )
         connection.exec_driver_sql(
             "CREATE TABLE depots (id INTEGER PRIMARY KEY, user_id INTEGER, name TEXT, code TEXT, "
-            "address TEXT, latitude FLOAT, longitude FLOAT, is_active BOOLEAN, created_at TIMESTAMP, updated_at TIMESTAMP)"
+            "address TEXT, latitude FLOAT, longitude FLOAT, is_active BOOLEAN, "
+            "created_at TIMESTAMP, updated_at TIMESTAMP)"
         )
         connection.exec_driver_sql(
             "CREATE TABLE vehicles (id INTEGER PRIMARY KEY, scenario_id INTEGER NOT NULL, "
-            "name VARCHAR(100), capacity_kg FLOAT, start_latitude FLOAT, start_longitude FLOAT, is_available BOOLEAN)"
+            "name VARCHAR(100), capacity_kg FLOAT, start_latitude FLOAT, start_longitude FLOAT, "
+            "is_available BOOLEAN)"
         )
         connection.exec_driver_sql(
-            "CREATE TABLE scenario_vehicles (scenario_id INTEGER NOT NULL, vehicle_id INTEGER NOT NULL, "
+            "CREATE TABLE scenario_vehicles (scenario_id INTEGER NOT NULL, "
+            "vehicle_id INTEGER NOT NULL, "
             "PRIMARY KEY (scenario_id, vehicle_id), "
             "FOREIGN KEY (scenario_id) REFERENCES scenarios(id), "
             "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id))"
@@ -465,7 +470,8 @@ def test_legacy_vehicle_table_migration_allows_independent_records() -> None:
             "INSERT INTO users VALUES (1, 'Asha', 'asha@example.com', 'hash')"
         )
         connection.exec_driver_sql(
-            "INSERT INTO scenarios VALUES (1, 1, 'SC-OLD', 'Old scenario', '', 'draft', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+            "INSERT INTO scenarios VALUES (1, 1, 'SC-OLD', 'Old scenario', '', 'draft', "
+            "CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
         )
         connection.exec_driver_sql(
             "INSERT INTO vehicles VALUES (1, 1, 'Old truck', 5000, 11.0, 77.0, 1)"

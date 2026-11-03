@@ -3,11 +3,11 @@
 from pathlib import Path
 
 import pytest
+from road_fixtures import write_gpkg
 
 from app.services.road_costs import build_cost_matrix, road_speed_kmh, route_geometry
 from app.services.road_network import GeoPackageRoadNetwork, load_road_graph
 from app.services.validation import RoadLocation
-from road_fixtures import write_gpkg
 
 SNAP_M = 200.0
 METRES_PER_0_01_DEGREE = 1112
@@ -27,7 +27,9 @@ def at(name: str, node: tuple[float, float]) -> RoadLocation:
     return RoadLocation(name, node[1], node[0])
 
 
-def along(start: tuple[float, float], end: tuple[float, float], share: float) -> tuple[float, float]:
+def along(
+    start: tuple[float, float], end: tuple[float, float], share: float
+) -> tuple[float, float]:
     return start[0] + (end[0] - start[0]) * share, start[1] + (end[1] - start[1]) * share
 
 

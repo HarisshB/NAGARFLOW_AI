@@ -213,7 +213,7 @@ def load_road_graph(path: Path, snap_max_m: float) -> RoadGraph:
                     nodes.reverse()
                 two_way = direction == "both"
                 speed = road_speed_kmh(highway) * METRES_PER_SECOND_PER_KMH
-                for start, end in zip(nodes, nodes[1:]):
+                for start, end in zip(nodes, nodes[1:], strict=False):
                     if start == end:
                         continue
                     length_m = segment_length_m(start, end)
@@ -244,7 +244,7 @@ def load_road_graph(path: Path, snap_max_m: float) -> RoadGraph:
         (node_index[start], node_index[end], data["length_m"])
         for start, end, data in graph.edges(data=True)
     ]
-    sources, targets, lengths = zip(*edges)
+    sources, targets, lengths = zip(*edges, strict=True)
     distance_csr = csr_matrix((lengths, (sources, targets)), shape=(len(nodes), len(nodes)))
     return RoadGraph(
         graph=graph, segments=segments, cells=cells, cell_deg=cell_deg, groups=groups,
@@ -319,7 +319,7 @@ class GeoPackageRoadNetwork:
         locations = [depot, *points, facility]
         snaps = [self.snap(location) for location in locations]
         too_far = list(dict.fromkeys(
-            location.name for location, snap in zip(locations, snaps) if snap is None
+            location.name for location, snap in zip(locations, snaps, strict=True) if snap is None
         ))
         reachable: dict[Node, set[Node]] = {}
 

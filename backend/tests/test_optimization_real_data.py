@@ -35,7 +35,9 @@ def test_both_algorithms_on_city_roads() -> None:
         if CITY_WEST <= node[0] <= CITY_EAST and CITY_SOUTH <= node[1] <= CITY_NORTH
     )
     chosen = city[:: len(city) // LOCATIONS][:LOCATIONS]
-    locations = [RoadLocation(f"L{index:02d}", node[1], node[0]) for index, node in enumerate(chosen)]
+    locations = [
+        RoadLocation(f"L{index:02d}", node[1], node[0]) for index, node in enumerate(chosen)
+    ]
 
     started = time.perf_counter()
     matrix = build_cost_matrix(GeoPackageRoadNetwork(road_graph, SNAP_M), locations)

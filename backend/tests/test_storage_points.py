@@ -112,7 +112,9 @@ def test_create_rejects_invalid_storage_point_data(
 def test_point_codes_are_unique_case_insensitively(
     client: TestClient, auth_headers: dict[str, str]
 ) -> None:
-    assert client.post(STORAGE_POINTS, json=point_payload(), headers=auth_headers).status_code == 201
+    assert client.post(
+        STORAGE_POINTS, json=point_payload(), headers=auth_headers
+    ).status_code == 201
     duplicate = client.post(
         STORAGE_POINTS,
         json=point_payload(point_code="sp001"),
@@ -139,7 +141,9 @@ def test_storage_points_are_scoped_to_the_signed_in_coordinator(
 
     assert client.get(STORAGE_POINTS, headers=other_headers).json() == []
     assert client.get(f"{STORAGE_POINTS}/{created['id']}", headers=other_headers).status_code == 404
-    assert client.delete(f"{STORAGE_POINTS}/{created['id']}", headers=other_headers).status_code == 404
+    assert client.delete(
+        f"{STORAGE_POINTS}/{created['id']}", headers=other_headers
+    ).status_code == 404
 
 
 def test_linked_point_cannot_be_deleted_or_increased_beyond_vehicle_capacity(
