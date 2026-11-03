@@ -84,7 +84,7 @@ export default function DashboardPage() {
     return (
       <div className="page-loading">
         <span className="loading-dot" />
-        <p>Loading your municipality's figures…</p>
+        <p>Loading your municipality&apos;s figures…</p>
       </div>
     );
   }

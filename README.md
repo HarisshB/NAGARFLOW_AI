@@ -105,7 +105,10 @@ Frontend:
 ```powershell
 cd frontend
 npm test
+npm run lint
 ```
+
+`npm run lint` runs ESLint with the rules in `frontend/eslint.config.js`.
 
 The frontend suite renders the real app in jsdom and replaces only the API
 module, so routing, the auth guard and the dashboard are exercised for real.
