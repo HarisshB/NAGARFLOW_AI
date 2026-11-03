@@ -218,3 +218,13 @@ def test_compose_takes_each_backend_setting_from_the_env_file() -> None:
     ]
 
     assert pinned == []
+
+
+def test_dev_requirements_pin_ruff_to_one_minor_release() -> None:
+    """Ruff's minor releases turn on new rules, so CI must lint with the version used here."""
+    pins = [
+        line.strip()
+        for line in (BACKEND / "requirements-dev.txt").read_text().splitlines()
+        if line.startswith("ruff")
+    ]
+    assert pins == ["ruff>=0.17.3,<0.18"]
