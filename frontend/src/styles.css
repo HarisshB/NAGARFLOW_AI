@@ -48,8 +48,7 @@ button { cursor: pointer; }
 .city-card-top > div { display: grid; gap: 6px; }
 .mini-label { color: #8db4a0; font-size: 8px; letter-spacing: 1.4px; }
 .city-card-top strong { font-family: "Aptos Display", "Segoe UI", sans-serif; color: #f2f7f3; font-size: 15px; font-weight: 600; }
-.live-indicator { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 4px; color: #a8cdb0; background: rgba(129,195,143,.1); font-size: 8px; font-weight: 700; letter-spacing: 1px; }
-.live-indicator i { width: 5px; height: 5px; border-radius: 50%; background: #9bce92; }
+.data-tag { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 4px; color: #a8cdb0; background: rgba(129,195,143,.1); font-size: 8px; font-weight: 700; letter-spacing: 1px; }
 .city-metrics { display: grid; grid-template-columns: repeat(3, 1fr); padding: 17px 0; }
 .metric { display: grid; grid-template-columns: 25px 1fr; align-items: center; column-gap: 5px; }
 .metric + .metric { padding-left: 11px; border-left: 1px solid rgba(230,241,234,.11); }
@@ -60,11 +59,6 @@ button { cursor: pointer; }
 .metric strong { color: #f3f8f3; font-family: "Aptos Display", "Segoe UI", sans-serif; font-size: 18px; font-weight: 700; }
 .metric small { grid-column: 2; color: #a9beb4; font-size: 9px; }
 .city-card-footer { display: flex; align-items: center; gap: 9px; padding-top: 12px; border-top: 1px solid rgba(230,241,234,.12); color: #b1c6bb; font-size: 10px; }
-.avatar-stack { display: flex; padding-left: 3px; }
-.avatar-stack i { display: grid; width: 20px; height: 20px; margin-left: -3px; place-items: center; border: 1px solid #285149; border-radius: 50%; color: #24413a; background: #d3b893; font-size: 8px; font-style: normal; font-weight: 700; }
-.avatar-stack i:nth-child(2) { color: #33434e; background: #bdc9d2; }
-.avatar-stack i:nth-child(3) { color: #4a3c30; background: #d8a58d; }
-.avatar-stack i:nth-child(4) { color: #b7d8c0; background: #305b4b; }
 .footer-spark { margin-left: auto; color: #a7cf9f; font-size: 18px; }
 .story-footer, .form-bottom { position: relative; z-index: 1; display: flex; justify-content: space-between; margin-top: auto; padding-top: 32px; color: #7f9d91; font-size: 8px; letter-spacing: 1.3px; }
 .form-panel { min-height: 100vh; position: relative; display: grid; place-items: center; padding: 50px 52px 63px; }

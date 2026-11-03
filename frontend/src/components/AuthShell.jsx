@@ -11,15 +11,15 @@ function StoryPanel() {
       </div>
       <div className="city-card" aria-hidden="true">
         <div className="city-card-top">
-          <div><span className="mini-label">CITY OVERVIEW</span><strong>Good morning, city</strong></div>
-          <span className="live-indicator"><i /> LIVE</span>
+          <div><span className="mini-label">ABOUT THIS PROTOTYPE</span><strong>Secondary waste routing, Trichy</strong></div>
+          <span className="data-tag">SYNTHETIC DATA</span>
         </div>
         <div className="city-metrics">
-          <div className="metric"><span className="metric-icon teal-icon">↗</span><strong>128</strong><small>Ideas in motion</small></div>
-          <div className="metric"><span className="metric-icon gold-icon">✳</span><strong>24</strong><small>Neighborhoods</small></div>
-          <div className="metric"><span className="metric-icon coral-icon">♡</span><strong>4.8k</strong><small>Active neighbors</small></div>
+          <div className="metric"><span className="metric-icon teal-icon">↗</span><strong>2</strong><small>Vehicles per scenario</small></div>
+          <div className="metric"><span className="metric-icon gold-icon">✳</span><strong>1</strong><small>Processing facility</small></div>
+          <div className="metric"><span className="metric-icon coral-icon">♡</span><strong>10</strong><small>Test scenarios</small></div>
         </div>
-        <div className="city-card-footer"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i><i>+</i></span><span>Good things happen together.</span><span className="footer-spark">✳</span></div>
+        <div className="city-card-footer"><span>Greedy and OR-Tools, compared on road distance.</span><span className="footer-spark">✳</span></div>
       </div>
       <div className="story-footer"><span>MADE FOR THE PLACES WE CALL HOME</span><span>© 2026 NAGARFLOW</span></div>
     </section>
