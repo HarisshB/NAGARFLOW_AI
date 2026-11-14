@@ -184,6 +184,9 @@ of `.env.production.example`. `backend/scripts/smoke_check.py` checks a running
 site without changing anything. Setup, backups, upgrades, the proxy and what is
 not done are in [the deployment guide](docs/deployment/deployment-guide.md).
 
+A free Render demo is described by `render.yaml`; its differences and limits are in
+[the Render notes](docs/deployment/render.md).
+
 ## Dashboard
 
 After signing in, the dashboard shows six summary cards and five sections

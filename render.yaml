@@ -1,0 +1,103 @@
+# Render Blueprint: the free-tier demo deployment.
+#
+# Free limits that matter here: 512 MB for the API (the deployment guide
+# measured about 585 MiB after one optimization, so a large run may be killed),
+# the API sleeps after 15 idle minutes and takes about a minute to wake, and the
+# free database is deleted 30 days after it is created. See
+# docs/deployment/render.md.
+#
+# The public addresses below assume Render gives each service its own name as
+# its onrender.com subdomain. If it adds a suffix, change every address here.
+
+databases:
+  - name: nagarflow-db
+    plan: free
+    region: singapore
+    databaseName: nagarflow
+    user: nagarflow
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: nagarflow-trichy-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: PORT
+        value: "8000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nagarflow-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: '["https://nagarflow-trichy.onrender.com"]'
+      - key: FRONTEND_BASE_URL
+        value: https://nagarflow-trichy.onrender.com
+      # No mail server yet. Production refuses an empty host, so this names one
+      # that cannot resolve: reset requests answer as usual, sending fails and
+      # is logged, and no link is written anywhere.
+      - key: SMTP_HOST
+        value: smtp.invalid
+      - key: EMAIL_FROM
+        value: NagarFlow <no-reply@nagarflow.invalid>
+      # The free plan has no disk, so the roads file is downloaded on every start.
+      - key: ROAD_NETWORK_PATH
+        value: /data/roads.gpkg
+      - key: ROAD_NETWORK_URL
+        value: https://github.com/HarisshB/NAGARFLOW_AI/releases/download/roads-2026-10-30/roads.gpkg
+      - key: ROAD_NETWORK_MD5
+        value: 7a49c60500312d0dc4b932fda4b957ed
+      - key: ROAD_SNAP_MAX_M
+        value: "200"
+      - key: OPTIMIZER_TIME_LIMIT_S
+        value: "10"
+      # One run at a time keeps memory inside the free 512 MB.
+      - key: OPTIMIZER_MAX_CONCURRENT
+        value: "1"
+      # Render's proxy is the one hop in front that adds X-Forwarded-For.
+      - key: TRUSTED_PROXY_HOPS
+        value: "1"
+
+  - type: web
+    name: nagarflow-trichy
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://nagarflow-trichy-api.onrender.com
+      - key: NODE_VERSION
+        value: "22"
+    # The same headers frontend/nginx.conf sends.
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://nagarflow-trichy-api.onrender.com https://tile.openstreetmap.org; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'"
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    # Every client-side route is served the app, which then routes itself.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

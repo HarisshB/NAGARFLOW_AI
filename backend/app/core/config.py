@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_JWT_SECRET = "development-only-replace-before-deploy"
@@ -62,6 +62,19 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_use_tls: bool = True
     email_from: str = "NagarFlow <no-reply@nagarflow.local>"
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_the_psycopg_driver(cls, url: str) -> str:
+        """Hosts such as Render hand out postgres:// or postgresql:// addresses.
+
+        SQLAlchemy reads those as psycopg2, which is not installed, so name the
+        psycopg 3 driver the requirements provide.
+        """
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url[len(prefix):]
+        return url
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parents[3] / ".env",

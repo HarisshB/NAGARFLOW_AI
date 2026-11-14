@@ -228,3 +228,14 @@ def test_dev_requirements_pin_ruff_to_one_minor_release() -> None:
         if line.startswith("ruff")
     ]
     assert pins == ["ruff>=0.17.3,<0.18"]
+
+
+@pytest.mark.parametrize("scheme", ["postgres://", "postgresql://"])
+def test_a_hosted_database_address_gets_the_psycopg_driver(scheme: str) -> None:
+    values = production_values(database_url=f"{scheme}user:pw@host:5432/db")
+    assert values.database_url == "postgresql+psycopg://user:pw@host:5432/db"
+
+
+def test_other_database_addresses_are_left_alone() -> None:
+    for url in ("postgresql+psycopg://u:p@h/db", "sqlite:///./test.db"):
+        assert production_values(database_url=url).database_url == url
